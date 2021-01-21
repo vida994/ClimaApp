@@ -14,6 +14,8 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     
+    var weatherManager = WeatherManager()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +27,9 @@ class WeatherViewController: UIViewController {
     
     @IBAction func searchPressed(_ sender: Any) {
         
-        
-        
-    }
+        // Dismiss keyboard
+        searchTextField.endEditing(true)
+        }
     
 }
 
@@ -37,13 +39,33 @@ extension WeatherViewController: UITextFieldDelegate {
     
     // Return pressed
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
+        // Dismiss keyboard
+        searchTextField.endEditing(true)
         return true
     }
     
-    //
+    // Clear text from serach after editing
     func textFieldDidEndEditing(_ textField: UITextField) {
         
+        // Save what user has typed
+        if let city = searchTextField.text {
+            
+            weatherManager.fetchWeather(cityName: city)
+            
+        }
+        searchTextField.text = ""
+        
+    }
+    
+    // User tapped somewhere else, dismiss keyboard
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if searchTextField.text != "" {
+            return true
+        }
+        else {
+            searchTextField.placeholder = "Type something"
+            return false
+        }
         
     }
     
